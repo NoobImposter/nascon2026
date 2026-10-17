@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
+from app.utils.errors import ApiError
 from app.db import SessionLocal
 from app.models.core import Variant, DiscountCode, AppState
 from app.utils.errors import (
@@ -109,7 +110,7 @@ def checkout(body: dict) -> tuple[int, dict]:
         discount_minor = 0
         if discount_code is not None:
             if discount_code != "WELCOME10":
-                raise validation_error(["discount_code"], "Invalid discount code")
+                raise ApiError(400, "INVALID_DISCOUNT_CODE", "Invalid discount code", {"discount_code": str(discount_code)})
             # will calculate after subtotal
 
         # ---------- 5. Atomic reservation ----------
@@ -118,7 +119,7 @@ def checkout(body: dict) -> tuple[int, dict]:
         locked = {}
         for vid in variant_ids:
             v = db.execute(
-                select(Variant).where(Variant.variant_id == vid).with_for_update()
+                select(Variant).where(Variant.variant_id == vid).with_for_update().execution_options(populate_existing=True)
             ).scalar_one()
             locked[vid] = v
 

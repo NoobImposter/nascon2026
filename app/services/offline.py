@@ -4,6 +4,7 @@ Replays queued actions from a mobile device with conflict resolution.
 """
 
 from __future__ import annotations
+from app.utils.errors import ApiError
 
 from typing import Any
 
@@ -78,6 +79,12 @@ def offline_sync(body: dict) -> dict:
             try:
                 if action_type == "score_event":
                     # payload is the same shape as POST /audit/v1/events
+                    try:
+                        _cur = events_svc.get_score(payload.get("match_id"))["version"]
+                    except Exception:
+                        _cur = None
+                    if _cur is not None and isinstance(base_version, int) and base_version > _cur:
+                        raise ApiError(409, "INVALID_BASE_VERSION", "base_version is ahead of the server.")
                     status, content = events_svc.append_event(payload)
 
                     # Determine resolution
@@ -88,7 +95,7 @@ def offline_sync(body: dict) -> dict:
                     else:
                         # Check version
                         # For simplicity we treat any successful append as applied/rebased
-                        resolution = "rebased_append" if base_version is not None else "appended"
+                        resolution = "appended" if (_cur is None or base_version == _cur) else "rebased_append"
                         status_str = "applied"
                         applied += 1
 
