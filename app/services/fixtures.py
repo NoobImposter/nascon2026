@@ -1,31 +1,23 @@
 from __future__ import annotations
 
 from typing import Any
-
-
-
-
-from app.utils.errors import validation_error, conflict
-from app.utils.validation import valid_id, is_int
-
-
-
-
-
-
-"""
-app/services/fixtures.py
-Pure fixture generation for all four formats required by Section 5.7.
-No database access – pure functions only.
-"""
-
-from __future__ import annotations
-
 import math
 from typing import Any
 
 from app.utils.errors import validation_error, conflict
 from app.utils.validation import valid_id, is_int
+
+
+from app.utils.errors import validation_error, conflict
+from app.utils.validation import valid_id, is_int
+
+
+
+
+
+
+
+
 
 
 # ──────────────────────────────────────────────────────────────

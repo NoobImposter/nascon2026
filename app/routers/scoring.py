@@ -81,10 +81,9 @@ async def create_sport(request: Request):
     config = await run_in_threadpool(sports_svc.create_sport, body)
     return JSONResponse(status_code=201,
                         content={"sport_id": config["sport_id"], "status": "created",
-         
-         
-         
-         from app.services import store as store_svc
+                                 "config": config})
+
+from app.services import store as store_svc
 from fastapi.responses import JSONResponse
 
 @router.post("/checkout")
@@ -96,7 +95,7 @@ async def checkout(request: Request):
 
 @router.get("/inventory/{variant_id}")
 def inventory(variant_id: str):
-    return store_svc.get_inventory(variant_id)                        "config": config})
+    return store_svc.get_inventory(variant_id)
 
 
 @router.post("/leagues")

@@ -146,3 +146,10 @@ def get_score(match_id: str) -> dict:
             raise not_found("MATCH_NOT_FOUND", f"Match {match_id} not found.", match_id=match_id)
         cfg = db.get(Sport, m.sport_id).config
         return scoring.project(_meta(m), cfg, _load_events(db, match_id))
+
+
+def project_match(db, match_id: str) -> dict:
+    """Score projection for one match, rebuilt from the event log (same as get_score)."""
+    m = db.get(Match, match_id)
+    cfg = db.get(Sport, m.sport_id).config
+    return scoring.project(_meta(m), cfg, _load_events(db, match_id))
