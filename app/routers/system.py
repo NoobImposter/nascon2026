@@ -57,3 +57,12 @@ async def reset(request: Request):
         raise validation_error(bad)
 
     return await run_in_threadpool(reset_all, seed, stock)
+
+from app.services.ratelimit import check_rate_limit
+
+@router.get("/api/v1/ping")
+async def ping(request: Request):
+    limited = check_rate_limit(request)
+    if limited:
+        return limited
+    return {"pong": True}

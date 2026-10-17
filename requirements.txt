@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy
+psycopg2-binary
+PyJWT
+pydantic
+python-multipart
+redis
+reportlab

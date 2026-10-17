@@ -28,3 +28,6 @@ app.add_middleware(BodyLimitMiddleware)
 register_handlers(app)
 app.include_router(system.router)
 app.include_router(scoring.router)
+
+from app.routers import rbac   # or whatever you named it
+app.include_router(rbac.router)
